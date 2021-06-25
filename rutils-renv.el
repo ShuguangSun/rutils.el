@@ -3,6 +3,10 @@
 ;; Copyright (C) 2021  Shuguang Sun
 
 ;; Author: Shuguang Sun <shuguang79@qq.com>
+;; Created: 2021/06/25
+;; Version: 0.0.1
+;; URL: https://github.com/ShuguangSun/rutils
+;; Package-Requires: ((emacs "26.1") (ess "18.10.1") (transient "0.3.5"))
 ;; Keywords: convenience
 
 ;; This program is free software; you can redistribute it and/or modify
