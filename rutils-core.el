@@ -1,12 +1,8 @@
-;;; rutils.el --- R utilities with transient         -*- lexical-binding: t; -*-
+;;; rutils-core.el --- core functions                -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shuguang Sun
 
 ;; Author: Shuguang Sun <shuguang79@qq.com>
-;; Created: 2021/06/25
-;; Version: 0.0.1
-;; URL: https://github.com/ShuguangSun/rutils
-;; Package-Requires: ((emacs "26.1") (ess "18.10.1") (transient "0.3.0"))
 ;; Keywords: convenience
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -28,13 +24,31 @@
 
 ;;; Code:
 
+
 (require 'ess-inf)
 (require 'ess-r-mode)
 (require 'ess-r-completion)
+(require 'subr-x)
+(require 'json)
 (require 'transient)
 
-(require 'rutils-core)
-(require 'rutils-renv)
+(defun rutils-core--command (cmd)
+  "Wrap up of `ess-command' with checking process avalability frist."
+  ;; dir first
+  (unless (and (string= "R" ess-dialect) ess-local-process-name)
+    (ess-switch-process))
+  (let* ((buf (current-buffer))
+         (proc-name (buffer-local-value 'ess-local-process-name buf))
+         (proc (get-process proc-name)))
+    (when (and proc-name proc
+               (not (process-get proc 'busy)))
+      ;; (ess-command cmd nil nil nil nil proc)
+      (pop-to-buffer (process-buffer proc))
+      (ess-send-string proc cmd t)
+      (pop-to-buffer buf)
+      (revert-buffer))))
 
-(provide 'rutils)
-;;; rutils.el ends here
+
+
+(provide 'rutils-core)
+;;; rutils-core.el ends here
