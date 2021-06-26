@@ -371,6 +371,7 @@
     (rutils-core--command (concat "renv::diagnostics(" args ")"))))
 
 ;;; * menu
+;;;###autoload (autoload 'rutils-renv "rutils-renv" nil t)
 (transient-define-prefix rutils-renv ()
   "renv menu."
   ["Arguments"
