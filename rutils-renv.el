@@ -38,13 +38,18 @@
 
 (defvar rutils-renv-option-boolean-list
   '("bare" "force" "restart" "regex" "version" "reload" "cache"
-    "clean")
+    "clean" "update" "dev")
   "renv BOOLEAN options.")
 
 (defvar rutils-renv-option-string-list
-  '("profile" "repos" "type")
+  '(;; directory
+    "project" "path" "root"
+    ;; file
+    "lockfile"
+    ;; string
+    "profile" "repos" "type"
+    )
   "renv STRING options.")
-
 
 (defun rutils-renv--assert (args)
   (let ((bollist (mapcar (lambda (x) (concat "--" x))
@@ -53,24 +58,22 @@
                   "\\`--\\("
                   (mapconcat 'identity rutils-renv-option-string-list "\\|")
                   "\\)=\\(.+\\)")))
-  (cl-loop for arg in args
-           do (cond
-               ((string-match-p "\\`--project=.+" arg)
-                (setq arg (file-name-as-directory (substring arg 10)))
-                (if (> (length arg) 0)
-                    (setq arg (concat "project=" (shell-quote-argument arg)))))
-               ((string-match strlist arg)
-                (setq arg (concat
-                           (substring arg (match-beginning 1) (match-end 1))
-                           "="
-                           (shell-quote-argument
-                            (substring arg (match-beginning 2) (match-end 2))))))
-               ((member arg bollist)
-                (setq arg (concat (substring arg 2) "=TRUE")))
-               (t
-                (setq arg nil)))
-           collect arg into ret
-           finally return (string-join (delq nil (delete-dups ret)) ", "))))
+    (cl-loop for arg in args
+             do (cond
+                 ((string-match strlist arg)
+                  (setq arg (concat
+                             (substring arg (match-beginning 1) (match-end 1))
+                             "="
+                             (shell-quote-argument
+                              (substring arg (match-beginning 2) (match-end 2))))))
+                 ((member arg bollist)
+                  (setq arg (concat (substring arg 2) "=TRUE")))
+                 (t
+                  (setq arg nil)))
+             collect arg into ret
+             finally return (string-join (delq nil (delete-dups ret)) ", "))))
+
+
 
 
 (transient-define-argument rutils-renv:--reuse-project ()
@@ -102,15 +105,6 @@
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
     (rutils-core--command (concat "renv::init(" args ")"))))
-
-
-;; (transient-define-argument rutils-renv:--reuse-profile ()
-;;   :description "The profile to be activated. Default NULL."
-;;   :class 'transient-option
-;;   :shortarg "-P"
-;;   :argument "--profile="
-;;   :reader 'read-string
-;;   :history-key 'rutils-renv-profile-history)
 
 
 (transient-define-prefix rutils-renv-init ()
@@ -176,9 +170,7 @@
    ("-F" "Force? Default FALSE" "--force")
    ("-R" "reprex? Default `FALSE'" "--regex")]
   [["Renv::"
-    ("s" "Snapshot"         rutils-renv-snapshot-run)]]
-  (interactive)
-  (transient-setup 'rutils-renv-snapshot))
+    ("s" "Snapshot"         rutils-renv-snapshot-run)]])
 
 
 ;;; * renv::status
@@ -210,9 +202,7 @@
    ("-l" "lockfile" "--lockfile=" transient-read-file)
    ("-c" "cache? Default `FALSE'" "--cache")]
   [["Renv::"
-    ("s" "Status"         rutils-renv-status-run)]]
-  (interactive)
-  (transient-setup 'rutils-renv-status))
+    ("s" "Status"         rutils-renv-status-run)]])
 
 
 ;;; * renv::restore
@@ -247,9 +237,7 @@
    ("-R" "repos" "--repos=" read-string)
    ("-C" "clean? Default `FALSE'" "--clean")]
   [["Renv::"
-    ("r" "Restore"         rutils-renv-restore-run)]]
-  (interactive)
-  (transient-setup 'rutils-renv-restore))
+    ("r" "Restore"         rutils-renv-restore-run)]])
 
 
 ;;; * renv::update
@@ -277,56 +265,127 @@
   "renv::update."
   ["Arguments"
    (rutils-renv:--reuse-project)
+   ;; exclude
+   ;; library
    ("-v" "version? Default `NULL'" "--version")
    ("-r" "reload? Default `FALSE'" "--reload")]
   [["Renv::"
-    ("s" "Update"         rutils-renv-update-run)]]
-  (interactive)
-  (transient-setup 'rutils-renv-update))
+    ("u" "Update"         rutils-renv-update-run)]])
 
 
-;; (transient-define-prefix rutils-renv ()
-;;   "Create a new commit or replace an existing commit."
-;;   :info-manual "(magit)Initiating a Commit"
-;;   :man-page "git-commit"
-;;   ["Arguments"
-;;    ;; init
-;;    ("-p" "The project directory. Default NULL, current getwd()."
-;;     "--project=" transient-read-directory)
-;;    ("-P" "The profile to be activated. Default NULL."
-;;     "--profile=" transient-read-file)
-;;    ("-b" "Bare? Default FALSE" "-b")
-;;    ("-F" "Force? Default FALSE" "-f")
-;;    ("-r" "Restart? Default `interactive()'" "-f")
-;;    ;; restore
-;;    ;; library = NULL,
-;;    ;; lockfile = NULL,
-;;    ;; packages = NULL,
-;;    ;; rebuild = FALSE,
-;;    ;; repos = NULL,
-;;    ;; clean = FALSE,
-;;    ;; prompt = interactive()
+;;; * renv::hydrate
+(defun rutils-renv-hydrate-run (&optional args)
+  "Invoke renv::hydrate with ARGS if provided."
+  (interactive (if current-prefix-arg
+                   nil
+                 (list (transient-args 'rutils-renv-hydrate))))
+  (let (proj)
+    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
+      (setq proj (cl-find nil args
+                          :if (lambda (x) (string-match-p "\\`--project=" x))))
+      (when (> (length proj) 0)
+        (setq proj (file-name-as-directory (substring proj 10)))
+        (if (file-exists-p proj)
+            (dired proj)
+          (if (y-or-n-p-with-timeout
+               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (progn (make-directory proj)
+                      (dired proj))))))
+    (if args (setq args (rutils-renv--assert args)) "")
+    (rutils-core--command (concat "renv::hydrate(" args ")"))))
 
-;;    ]
-;;   [["Create"
-;;     ("c" "Commit"         spring/format-commit)]
-;;    ["Edit HEAD"
-;;     ("e" "Extend"         magit-commit-extend)
-;;     ("w" "Reword"         magit-commit-reword)
-;;     ("a" "Amend"          magit-commit-amend)
-;;     (6 "n" "Reshelve"     magit-commit-reshelve)]
-;;    ["Edit"
-;;     ("f" "Fixup"          magit-commit-fixup)
-;;     ("s" "Squash"         magit-commit-squash)
-;;     ("A" "Augment"        magit-commit-augment)
-;;     (6 "x" "Absorb changes" magit-commit-autofixup)]
-;;    [""
-;;     ("F" "Instant fixup"  magit-commit-instant-fixup)
-;;     ("S" "Instant squash" magit-commit-instant-squash)]]
-;;   (interactive)
-;;   (if-let ((buffer (magit-commit-message-buffer)))
-;;       (switch-to-buffer buffer)
-;;     (transient-setup 'magit-commit)))
+(transient-define-prefix rutils-renv-hydrate ()
+  "renv::hydrate."
+  ["Arguments"
+   (rutils-renv:--reuse-project)
+   ;; packages not supported
+   ;; library not supported
+   ("-u" "surces? Default `FALSE'" "--update")
+   ;; ("-s" "sources? Default `NULL'" "--sources")
+   ]
+  [["Renv::"
+    ("h" "Hydrate"         rutils-renv-hydrate-run)]])
+
+
+;;; * renv::dependencies
+(defun rutils-renv-dependencies-run (&optional args)
+  "Invoke renv::dependencies with ARGS if provided."
+  (interactive (if current-prefix-arg
+                   nil
+                 (list (transient-args 'rutils-renv-dependencies))))
+  (let (proj)
+    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
+      (setq proj (cl-find nil args
+                          :if (lambda (x) (string-match-p "\\`--project=" x))))
+      (when (> (length proj) 0)
+        (setq proj (file-name-as-directory (substring proj 10)))
+        (if (file-exists-p proj)
+            (dired proj)
+          (if (y-or-n-p-with-timeout
+               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (progn (make-directory proj)
+                      (dired proj))))))
+    (if args (setq args (rutils-renv--assert args)) "")
+    (rutils-core--command (concat "renv::dependencies(" args ")"))))
+
+(transient-define-infix rutils-renv:--dependencies-errors ()
+  :description "errors? Default all (reported, fatal, ignored)."
+  :class 'transient-option
+  :key "-e"
+  :argument "--errors="
+  :multi-value t
+  :choices '("reported" "fatal" "ignored" "all"))
+
+(transient-define-prefix rutils-renv-dependencies ()
+  "renv::dependencies."
+  ["Arguments"
+   ("-p" "The path to R files. Default getwd()."
+    "--path=" transient-read-directory)
+   ("-r" "root directory."
+    "--root=" transient-read-directory)
+   ;; exclude
+   ;; library
+   ;; ("-P" "Progress? Default `TRUE'" "--progress")
+   (rutils-renv:--dependencies-errors)
+   ("-d" "dev? Default `FALSE'" "--dev")]
+  [["Renv::"
+    ("d" "Dependencies"         rutils-renv-dependencies-run)]])
+
+
+;;; * renv::diagnostics
+(defun rutils-renv-diagnostics-run (&optional args)
+  "Invoke renv::diagnostics with ARGS if provided."
+  (interactive (if current-prefix-arg
+                   nil
+                 (list (transient-args 'rutils-renv))))
+  (let (proj)
+    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
+      (setq proj (cl-find nil args
+                          :if (lambda (x) (string-match-p "\\`--project=" x))))
+      (when (> (length proj) 0)
+        (setq proj (file-name-as-directory (substring proj 10)))
+        (if (file-exists-p proj)
+            (dired proj)
+          (error "%s not exist!" proj))))
+    (if args (setq args (rutils-renv--assert args)) "")
+    (rutils-core--command (concat "renv::diagnostics(" args ")"))))
+
+;;; * menu
+(transient-define-prefix rutils-renv ()
+  "renv menu."
+  ["Arguments"
+   (rutils-renv:--reuse-project)]
+  [["Renv::"
+    ("i" "init" rutils-renv-init)
+    ("s" "snapshot" rutils-renv-snapshot)
+    ("r" "restore" rutils-renv-restore)]
+   ["Renv::"
+    ("h" "hydrate" rutils-renv-hydrate)
+    ("u" "update" rutils-renv-update)]
+   ["Renv::"
+    ("S" "Stutas" rutils-renv-status)
+    ("D" "Diagnostics" rutils-renv-diagnostics-run)
+    ("d" "Dependencies"         rutils-renv-dependencies)]])
 
 
 (provide 'rutils-renv)
