@@ -1,4 +1,4 @@
-;;; rutils.el --- R utilities with transient         -*- lexical-binding: t; -*-
+;;; rutils.el --- General stuffs                -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shuguang Sun
 
@@ -24,17 +24,51 @@
 
 ;;; Commentary:
 
-;;
+;; General stuffs used in multiple files.
 
 ;;; Code:
+
 
 (require 'ess-inf)
 (require 'ess-r-mode)
 (require 'ess-r-completion)
+(require 'subr-x)
+(require 'json)
 (require 'transient)
 
-(require 'rutils-core)
-(require 'rutils-renv)
+(defgroup rutils nil
+  "R utilities with transient menu."
+  :group 'rutils
+  :prefix "rutils")
+
+
+(defcustom rutils-using-compile-p nil
+  "Using compile or using `ess-command' with R process?"
+  :group 'rutils
+  :type 'boolean)
+
+
+(defun rutils--command (cmd &optional buffer)
+  "Wrap up of `ess-command' with checking process avalability frist.
+Argument CMD R script/command as string.
+Optional argument BUFFER if non-nill, display the output in the BUFFER."
+  ;; dir first
+  (unless (and (string= "R" ess-dialect) ess-local-process-name)
+    (ess-switch-process))
+  (let* ((buf (current-buffer))
+         (proc-name (buffer-local-value 'ess-local-process-name buf))
+         (proc (get-process proc-name)))
+    (when (and proc-name proc
+               (not (process-get proc 'busy)))
+      (if buffer
+          (ess-execute cmd (get-buffer-create buffer))
+        ;; (ess-command cmd nil nil nil nil proc)
+        (pop-to-buffer (process-buffer proc))
+        (ess-send-string proc cmd t)
+        (pop-to-buffer buf)
+        (revert-buffer)))))
+
+
 
 (provide 'rutils)
 ;;; rutils.el ends here

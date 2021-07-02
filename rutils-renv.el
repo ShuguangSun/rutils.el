@@ -5,7 +5,7 @@
 ;; Author: Shuguang Sun <shuguang79@qq.com>
 ;; Created: 2021/06/25
 ;; Version: 0.0.1
-;; URL: https://github.com/ShuguangSun/rutils
+;; URL: https://github.com/ShuguangSun/rutils.el
 ;; Package-Requires: ((emacs "26.1") (ess "18.10.1") (transient "0.3.0"))
 ;; Keywords: convenience
 
