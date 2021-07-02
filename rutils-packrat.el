@@ -31,7 +31,7 @@
 (eval-when-compile
   (require 'cl-lib)
   (require 'subr-x))
-(require 'rutils-core)
+(require 'rutils)
 
 (defcustom rutils-packrat-buffer "* R Packrat *"
   "Packrat logging buffer."
@@ -110,7 +110,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::init(" args ")"))))
+    (rutils-send--command (concat "packrat::init(" args ")"))))
 
 
 (transient-define-prefix rutils-packrat-init ()
@@ -149,7 +149,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::snapshot(" args ")"))))
+    (rutils-send--command (concat "packrat::snapshot(" args ")"))))
 
 (transient-define-prefix rutils-packrat-snapshot ()
   "R packrat::snapshot."
@@ -182,7 +182,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::status(" args ")"))))
+    (rutils-send--command (concat "packrat::status(" args ")"))))
 
 (transient-define-prefix rutils-packrat-status ()
   "R packrat::status."
@@ -212,7 +212,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::restore(" args ")"))))
+    (rutils-send--command (concat "packrat::restore(" args ")"))))
 
 (transient-define-prefix rutils-packrat-restore ()
   "R packrat::restore."
@@ -243,7 +243,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::bundle(" args ")"))))
+    (rutils-send--command (concat "packrat::bundle(" args ")"))))
 
 (transient-define-prefix rutils-packrat-bundle ()
   "R packrat::bundle."
@@ -278,7 +278,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::unbundle(" args ")"))))
+    (rutils-send--command (concat "packrat::unbundle(" args ")"))))
 
 (transient-define-prefix rutils-packrat-unbundle ()
   "R packrat::unbundle."
@@ -308,7 +308,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::clean(" args ")"))))
+    (rutils-send--command (concat "packrat::clean(" args ")"))))
 
 (transient-define-prefix rutils-packrat-clean ()
   "R packrat::clean."
@@ -340,7 +340,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::disable(" args ")"))))
+    (rutils-send--command (concat "packrat::disable(" args ")"))))
 
 (transient-define-prefix rutils-packrat-disable ()
   "R packrat::disable."
@@ -369,7 +369,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::unused_packages(" args ")"))))
+    (rutils-send--command (concat "packrat::unused_packages(" args ")"))))
 
 (transient-define-prefix rutils-packrat-unused_packages ()
   "R packrat::unused_packages."
@@ -398,7 +398,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-core--command (concat "packrat::get_opts(" args ")") rutils-packrat-buffer)))
+    (rutils-send--command (concat "packrat::get_opts(" args ")") rutils-packrat-buffer)))
 
 (transient-define-prefix rutils-packrat-get_opts ()
   "R packrat::get_opts."

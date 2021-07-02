@@ -31,7 +31,7 @@
 (eval-when-compile
   (require 'cl-lib)
   (require 'subr-x))
-(require 'rutils-core)
+(require 'rutils)
 
 
 (defvar rutils-renv-project-history nil "History of rutils renv.")
@@ -101,7 +101,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::init(" args ")"))))
+    (rutils-send--command (concat "renv::init(" args ")"))))
 
 
 (transient-define-prefix rutils-renv-init ()
@@ -145,7 +145,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::snapshot(" args ")"))))
+    (rutils-send--command (concat "renv::snapshot(" args ")"))))
 
 (transient-define-infix rutils-renv:--snapshot-type ()
   :description "Type? Default `implicit'"
@@ -189,7 +189,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::status(" args ")"))))
+    (rutils-send--command (concat "renv::status(" args ")"))))
 
 (transient-define-prefix rutils-renv-status ()
   "R renv::status."
@@ -221,7 +221,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::restore(" args ")"))))
+    (rutils-send--command (concat "renv::restore(" args ")"))))
 
 (transient-define-prefix rutils-renv-restore ()
   "R renv::restore."
@@ -256,7 +256,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::update(" args ")"))))
+    (rutils-send--command (concat "renv::update(" args ")"))))
 
 (transient-define-prefix rutils-renv-update ()
   "R renv::update."
@@ -289,7 +289,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::hydrate(" args ")"))))
+    (rutils-send--command (concat "renv::hydrate(" args ")"))))
 
 (transient-define-prefix rutils-renv-hydrate ()
   "R renv::hydrate."
@@ -323,7 +323,7 @@
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::dependencies(" args ")"))))
+    (rutils-send--command (concat "renv::dependencies(" args ")"))))
 
 (transient-define-infix rutils-renv:--dependencies-errors ()
   :description "errors? Default all (reported, fatal, ignored)."
@@ -365,7 +365,7 @@
             (dired proj)
           (error "%s not exist!" proj))))
     (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-core--command (concat "renv::diagnostics(" args ")"))))
+    (rutils-send--command (concat "renv::diagnostics(" args ")"))))
 
 ;;; * menu
 ;;;###autoload (autoload 'rutils-renv "rutils-renv" nil t)

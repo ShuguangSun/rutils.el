@@ -48,7 +48,7 @@
   :type 'boolean)
 
 
-(defun rutils--command (cmd &optional buffer)
+(defun rutils-send--command (cmd &optional buffer)
   "Wrap up of `ess-command' with checking process avalability frist.
 Argument CMD R script/command as string.
 Optional argument BUFFER if non-nill, display the output in the BUFFER."
