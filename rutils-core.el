@@ -32,7 +32,19 @@
 (require 'json)
 (require 'transient)
 
-(defun rutils-core--command (cmd)
+(defgroup rutils nil
+  "R utilities with transient menu."
+  :group 'rutils
+  :prefix "rutils")
+
+
+(defcustom rutils-using-compile-p nil
+  "Using compile or using `ess-command' with R process?"
+  :group 'rutils
+  :type 'boolean)
+
+
+(defun rutils-core--command (cmd &optional buffer)
   "Wrap up of `ess-command' with checking process avalability frist."
   ;; dir first
   (unless (and (string= "R" ess-dialect) ess-local-process-name)
@@ -42,11 +54,13 @@
          (proc (get-process proc-name)))
     (when (and proc-name proc
                (not (process-get proc 'busy)))
-      ;; (ess-command cmd nil nil nil nil proc)
-      (pop-to-buffer (process-buffer proc))
-      (ess-send-string proc cmd t)
-      (pop-to-buffer buf)
-      (revert-buffer))))
+      (if buffer
+          (ess-execute cmd (get-buffer-create buffer))
+        ;; (ess-command cmd nil nil nil nil proc)
+        (pop-to-buffer (process-buffer proc))
+        (ess-send-string proc cmd t)
+        (pop-to-buffer buf)
+        (revert-buffer)))))
 
 
 

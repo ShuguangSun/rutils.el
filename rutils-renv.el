@@ -1,4 +1,4 @@
-;;; rutils-renv.el --- renv with transient           -*- lexical-binding: t; -*-
+;;; rutils-renv.el --- R renv with transient           -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shuguang Sun
 
@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; Transient for renv for R
+;; Transient for renv for R.
 
 ;;; Code:
 
@@ -34,12 +34,12 @@
 (require 'rutils-core)
 
 
-(defvar rutils-renv-project-history nil "History of rutils-renv.")
+(defvar rutils-renv-project-history nil "History of rutils renv.")
 
 (defvar rutils-renv-option-boolean-list
   '("bare" "force" "restart" "regex" "version" "reload" "cache"
     "clean" "update" "dev")
-  "renv BOOLEAN options.")
+  "R renv BOOLEAN options.")
 
 (defvar rutils-renv-option-string-list
   '(;; directory
@@ -47,11 +47,11 @@
     ;; file
     "lockfile"
     ;; string
-    "profile" "repos" "type"
-    )
-  "renv STRING options.")
+    "profile" "repos" "type")
+  "R renv STRING options.")
 
 (defun rutils-renv--assert (args)
+  "Parse transient ARGS."
   (let ((bollist (mapcar (lambda (x) (concat "--" x))
                          rutils-renv-option-boolean-list))
         (strlist (concat
@@ -72,9 +72,6 @@
                   (setq arg nil)))
              collect arg into ret
              finally return (string-join (delq nil (delete-dups ret)) ", "))))
-
-
-
 
 (transient-define-argument rutils-renv:--reuse-project ()
   :description "The project directory. Default NULL, current getwd()."
@@ -100,7 +97,7 @@
         (if (file-exists-p proj)
             (dired proj)
           (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (format "\"%s\" not exist. Create it? " proj) 4 nil)
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
@@ -108,7 +105,7 @@
 
 
 (transient-define-prefix rutils-renv-init ()
-  "renv::init."
+  "R renv::init."
   ["Arguments"
    (rutils-renv:--reuse-project)
    ;; (rutils-renv:--reuse-profile)
@@ -144,7 +141,7 @@
         (if (file-exists-p proj)
             (dired proj)
           (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (format "\"%s\" not exist. Create it? " proj) 4 nil)
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
@@ -159,7 +156,7 @@
 
 
 (transient-define-prefix rutils-renv-snapshot ()
-  "renv::snapshot."
+  "R renv::snapshot."
   ["Arguments"
    (rutils-renv:--reuse-project)
    ;; ("-L" "library. (not supported by now)" "-L")
@@ -188,14 +185,14 @@
         (if (file-exists-p proj)
             (dired proj)
           (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (format "\"%s\" not exist. Create it? " proj) 4 nil)
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
     (rutils-core--command (concat "renv::status(" args ")"))))
 
 (transient-define-prefix rutils-renv-status ()
-  "renv::status."
+  "R renv::status."
   ["Arguments"
    (rutils-renv:--reuse-project)
    ;; ("-L" "library. (not supported by now)" "-L")
@@ -220,14 +217,14 @@
         (if (file-exists-p proj)
             (dired proj)
           (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (format "\"%s\" not exist. Create it? " proj) 4 nil)
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
     (rutils-core--command (concat "renv::restore(" args ")"))))
 
 (transient-define-prefix rutils-renv-restore ()
-  "renv::restore."
+  "R renv::restore."
   ["Arguments"
    (rutils-renv:--reuse-project)
    ;; ("-L" "library. (not supported by now)" "-L")
@@ -255,14 +252,14 @@
         (if (file-exists-p proj)
             (dired proj)
           (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (format "\"%s\" not exist. Create it? " proj) 4 nil)
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
     (rutils-core--command (concat "renv::update(" args ")"))))
 
 (transient-define-prefix rutils-renv-update ()
-  "renv::update."
+  "R renv::update."
   ["Arguments"
    (rutils-renv:--reuse-project)
    ;; exclude
@@ -288,14 +285,14 @@
         (if (file-exists-p proj)
             (dired proj)
           (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (format "\"%s\" not exist. Create it? " proj) 4 nil)
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
     (rutils-core--command (concat "renv::hydrate(" args ")"))))
 
 (transient-define-prefix rutils-renv-hydrate ()
-  "renv::hydrate."
+  "R renv::hydrate."
   ["Arguments"
    (rutils-renv:--reuse-project)
    ;; packages not supported
@@ -322,7 +319,7 @@
         (if (file-exists-p proj)
             (dired proj)
           (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it?" proj) 4 nil)
+               (format "\"%s\" not exist. Create it? " proj) 4 nil)
                (progn (make-directory proj)
                       (dired proj))))))
     (if args (setq args (rutils-renv--assert args)) "")
@@ -337,7 +334,7 @@
   :choices '("reported" "fatal" "ignored" "all"))
 
 (transient-define-prefix rutils-renv-dependencies ()
-  "renv::dependencies."
+  "R renv::dependencies."
   ["Arguments"
    ("-p" "The path to R files. Default getwd()."
     "--path=" transient-read-directory)
@@ -373,7 +370,7 @@
 ;;; * menu
 ;;;###autoload (autoload 'rutils-renv "rutils-renv" nil t)
 (transient-define-prefix rutils-renv ()
-  "renv menu."
+  "R renv menu."
   ["Arguments"
    (rutils-renv:--reuse-project)]
   [["Renv::"
