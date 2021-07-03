@@ -65,7 +65,7 @@
                              (substring arg (match-beginning 1) (match-end 1))
                              "="
                              (shell-quote-argument
-                              (substring arg (match-beginning 2) (match-end 2))))))
+                           (substring arg (match-beginning 2) (match-end 2))))))
                  ((member arg bollist)
                   (setq arg (concat (substring arg 2) "=TRUE")))
                  (t
@@ -90,7 +90,7 @@
                  (list (transient-args 'rutils-renv-init))))
   (rutils-send--command-with-project "renv::init" args))
 
-
+;;;###autoload (autoload 'rutils-renv-init "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-init ()
   "R renv::init."
   ["Arguments"
@@ -128,7 +128,7 @@
   :argument "--type="
   :choices '("implicit" "all" "explicit" "custom"))
 
-
+;;;###autoload (autoload 'rutils-renv-snapshot "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-snapshot ()
   "R renv::snapshot."
   ["Arguments"
@@ -152,6 +152,7 @@
                  (list (transient-args 'rutils-renv-status))))
   (rutils-send--command-with-project "renv::status" args))
 
+;;;###autoload (autoload 'rutils-renv-status "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-status ()
   "R renv::status."
   ["Arguments"
@@ -171,6 +172,7 @@
                  (list (transient-args 'rutils-renv-restore))))
   (rutils-send--command-with-project "renv::restore" args))
 
+;;;###autoload (autoload 'rutils-renv-restore "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-restore ()
   "R renv::restore."
   ["Arguments"
@@ -193,6 +195,7 @@
                  (list (transient-args 'rutils-renv-update))))
   (rutils-send--command-with-project "renv::update" args))
 
+;;;###autoload (autoload 'rutils-renv-update "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-update ()
   "R renv::update."
   ["Arguments"
@@ -213,6 +216,7 @@
                  (list (transient-args 'rutils-renv-hydrate))))
   (rutils-send--command-with-project "renv::hydrate" args))
 
+;;;###autoload (autoload 'rutils-renv-hydrate "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-hydrate ()
   "R renv::hydrate."
   ["Arguments"
@@ -242,6 +246,7 @@
   :multi-value t
   :choices '("reported" "fatal" "ignored" "all"))
 
+;;;###autoload (autoload 'rutils-renv-dependencies "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-dependencies ()
   "R renv::dependencies."
   ["Arguments"
