@@ -88,20 +88,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-init))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::init(" args ")"))))
+  (rutils-send--command-with-project "renv::init" args))
 
 
 (transient-define-prefix rutils-renv-init ()
@@ -132,20 +119,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-snapshot))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::snapshot(" args ")"))))
+  (rutils-send--command-with-project "renv::snapshot" args))
 
 (transient-define-infix rutils-renv:--snapshot-type ()
   :description "Type? Default `implicit'"
@@ -176,20 +150,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-status))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::status(" args ")"))))
+  (rutils-send--command-with-project "renv::status" args))
 
 (transient-define-prefix rutils-renv-status ()
   "R renv::status."
@@ -208,20 +169,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-restore))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::restore(" args ")"))))
+  (rutils-send--command-with-project "renv::restore" args))
 
 (transient-define-prefix rutils-renv-restore ()
   "R renv::restore."
@@ -243,20 +191,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-update))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::update(" args ")"))))
+  (rutils-send--command-with-project "renv::update" args))
 
 (transient-define-prefix rutils-renv-update ()
   "R renv::update."
@@ -276,20 +211,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-hydrate))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::hydrate(" args ")"))))
+  (rutils-send--command-with-project "renv::hydrate" args))
 
 (transient-define-prefix rutils-renv-hydrate ()
   "R renv::hydrate."
@@ -310,20 +232,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-dependencies))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::dependencies(" args ")"))))
+  (rutils-send--command-with-project "renv::dependencies" args))
 
 (transient-define-infix rutils-renv:--dependencies-errors ()
   :description "errors? Default all (reported, fatal, ignored)."
@@ -355,17 +264,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (error "%s not exist!" proj))))
-    (if args (setq args (rutils-renv--assert args)) "")
-    (rutils-send--command (concat "renv::diagnostics(" args ")"))))
+  (rutils-send--command-with-project "renv::diagnostics" args))
 
 ;;; * menu
 ;;;###autoload (autoload 'rutils-renv "rutils-renv" nil t)

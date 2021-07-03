@@ -40,14 +40,6 @@
 
 (defvar rutils-packrat-project-history nil "History of rutils packrat.")
 
-(defvar rutils-packrat-option-TRUE-list
-  '("enter" "restart" "infer.dependencies" "snapshot.sources")
-  "R packrat default TRUE options.")
-
-(defvar rutils-packrat-option-FALSE-list
-  '("overwrite.dirty" "dry.run" "ignore.stale" "quiet")
-  "R packrat default FALSE options.")
-
 (defvar rutils-packrat-option-string-list
   '(;; directory
     "project" "where"
@@ -57,11 +49,7 @@
 
 (defun rutils-packrat--assert (args)
   "Parse transient ARGS."
-  (let (;; (trulist (mapcar (lambda (x) (concat "--" x))
-        ;;                  rutils-packrat-option-TRUE-list))
-        ;; (fallist (mapcar (lambda (x) (concat "--" x))
-        ;;                  rutils-packrat-option-FALSE-list))
-        (strlist (concat
+  (let ((strlist (concat
                   "\\`--\\("
                   (mapconcat 'identity rutils-packrat-option-string-list "\\|")
                   "\\)=\\(.+\\)")))
@@ -73,10 +61,6 @@
                              "="
                              (shell-quote-argument
                               (substring arg (match-beginning 2) (match-end 2))))))
-                 ;; ((member arg trulist)
-                 ;;  (setq arg (concat (substring arg 2) "=FALSE")))
-                 ;; ((member arg fallist)
-                 ;;  (setq arg (concat (substring arg 2) "=TRUE")))
                  (t
                   (setq arg arg)))
              collect arg into ret
@@ -97,21 +81,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-init))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::init(" args ")"))))
-
+(rutils-send--command-with-project "packrat::init" args))
 
 (transient-define-prefix rutils-packrat-init ()
   "R packrat::init."
@@ -122,13 +92,7 @@
    ("-d" "infer.dependencies? Default `TRUE'" "infer.denpendencies=FALSE")
    ]
   [["Packrat::"
-    ("i" "Init"         rutils-packrat-init-run)]]
-  (interactive)
-  ;; (if-let ((buffer (magit-commit-message-buffer)))
-  ;;     (switch-to-buffer buffer)
-  (transient-setup 'rutils-packrat-init)
-  ;;)
-  )
+    ("i" "Init"         rutils-packrat-init-run)]])
 
 ;;; * packrat::snapshot
 (defun rutils-packrat-snapshot-run (&optional args)
@@ -169,20 +133,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-status))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::status(" args ")"))))
+  (rutils-send--command-with-project "packrat::status" args))
 
 (transient-define-prefix rutils-packrat-status ()
   "R packrat::status."
@@ -199,20 +150,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-restore))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::restore(" args ")"))))
+  (rutils-send--command-with-project "packrat::restore" args))
 
 (transient-define-prefix rutils-packrat-restore ()
   "R packrat::restore."
@@ -230,20 +168,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-bundle))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::bundle(" args ")"))))
+(rutils-send--command-with-project "packrat::bundle" args))
 
 (transient-define-prefix rutils-packrat-bundle ()
   "R packrat::bundle."
@@ -265,20 +190,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-unbundle))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::unbundle(" args ")"))))
+(rutils-send--command-with-project "packrat::unbundle" args))
 
 (transient-define-prefix rutils-packrat-unbundle ()
   "R packrat::unbundle."
@@ -295,20 +207,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-clean))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::clean(" args ")"))))
+(rutils-send--command-with-project "packrat::clean" args))
 
 (transient-define-prefix rutils-packrat-clean ()
   "R packrat::clean."
@@ -327,20 +226,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-disable))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::disable(" args ")"))))
+  (rutils-send--command-with-project "packrat::disable" args))
 
 (transient-define-prefix rutils-packrat-disable ()
   "R packrat::disable."
@@ -356,20 +242,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-unused_packages))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::unused_packages(" args ")"))))
+(rutils-send--command-with-project "packrat::unused_packages" args))
 
 (transient-define-prefix rutils-packrat-unused_packages ()
   "R packrat::unused_packages."
@@ -385,20 +258,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-get_opts))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-               (progn (make-directory proj)
-                      (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::get_opts(" args ")") rutils-packrat-buffer)))
+  (rutils-send--command-with-project "packrat::init" args rutils-packrat-buffer))
 
 (transient-define-prefix rutils-packrat-get_opts ()
   "R packrat::get_opts."

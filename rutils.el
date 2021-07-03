@@ -52,7 +52,6 @@
   "Wrap up of `ess-command' with checking process avalability frist.
 Argument CMD R script/command as string.
 Optional argument BUFFER if non-nill, display the output in the BUFFER."
-  ;; dir first
   (unless (and (string= "R" ess-dialect) ess-local-process-name)
     (ess-switch-process))
   (let* ((buf (current-buffer))
@@ -67,6 +66,31 @@ Optional argument BUFFER if non-nill, display the output in the BUFFER."
         (ess-send-string proc cmd t)
         (pop-to-buffer buf)
         (revert-buffer)))))
+
+(defun rutils-send--command-with-project (verb args &optional buffer)
+  "Send command with project path.
+Argument VERB R command, a string.
+Argument ARGS args from transient.
+Optional argument BUFFER if non-nil, display outputs in the buffer."
+  (if (not args)
+       (rutils-send--command (concat verb "()") buffer)
+     (let (proj)
+       ;; dir first
+       (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
+         (setq proj
+               (cl-find nil args
+                        :if (lambda (x) (string-match-p "\\`--project=" x))))
+         (when (> (length proj) 0)
+           (setq proj (file-name-as-directory (substring proj 10)))
+           (if (file-exists-p proj)
+               (dired proj)
+             (if (y-or-n-p-with-timeout
+                  (format "\"%s\" not exist. Create it? " proj) 4 nil)
+                 (progn (make-directory proj)
+                        (dired proj))))))
+       (if args (setq args (rutils-renv--assert args)) "")
+       (rutils-send--command (concat verb "(" args ")") buffer))))
+
 
 
 
