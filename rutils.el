@@ -42,13 +42,7 @@
   :prefix "rutils")
 
 
-(defcustom rutils-using-compile-p nil
-  "Using compile or using `ess-command' with R process?"
-  :group 'rutils
-  :type 'boolean)
-
-
-(defsubst rutils-send--command (cmd &optional buffer)
+(defsubst rutils--send-command (cmd &optional buffer)
   "Wrap up of `ess-command' with checking process availability first.
 Argument CMD R script/command as string.
 Optional argument BUFFER if non-nil, display the output in the BUFFER."
@@ -67,13 +61,13 @@ Optional argument BUFFER if non-nil, display the output in the BUFFER."
         (pop-to-buffer buf)
         (revert-buffer)))))
 
-(defun rutils-send--command-with-project (verb args &optional buffer)
+(defun rutils--send-command-with-project (verb args &optional buffer)
   "Send command with project path.
 Argument VERB R command, a string.
 Argument ARGS arguments from transient.
 Optional argument BUFFER if non-nil, display outputs in the buffer."
   (if (not args)
-       (rutils-send--command (concat verb "()") buffer)
+       (rutils--send-command (concat verb "()") buffer)
      (let (proj)
        ;; dir first
        (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
@@ -89,7 +83,7 @@ Optional argument BUFFER if non-nil, display outputs in the buffer."
                  (progn (make-directory proj)
                         (dired proj))))))
        (if args (setq args (rutils-renv--assert args)) "")
-       (rutils-send--command (concat verb "(" args ")") buffer))))
+       (rutils--send-command (concat verb "(" args ")") buffer))))
 
 
 

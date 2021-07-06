@@ -35,18 +35,21 @@ excluded_files:
   - ".typo-ci.yml"
   - ".github/.typo-ci.yml"
   - "*.gif"
+  - ".github/**/*"
 
 # Any words we should ignore?
 excluded_words:
-  - typoci
-  - emacs
+  - Eldev
   - defun
-  - rutils
-  - ess-command
   - elisp
-  - rutils-send--command-with-project
+  - emacs
+  - ess-command
+  - rutils
   - rutils-packrat-status
   - rutils-renv-status
+  - rutils-send--command-with-project
+  - typoci
+  - wucuo
 
 # Would you like filenames to also be spellchecked?
 spellcheck_filenames: false
