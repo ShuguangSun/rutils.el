@@ -1,4 +1,4 @@
-name: CI
+name: Eldev
 
 on:
   push:
@@ -11,6 +11,7 @@ on:
       - '**.md'
       - '**.gif'
       - '.aspell.en.pws'
+      - '.github'
 
 jobs:
   build:

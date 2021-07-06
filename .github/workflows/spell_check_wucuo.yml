@@ -39,4 +39,4 @@ jobs:
 
     - name: Wucuo
       run: |
-        emacs -batch -Q -L wucuo/ -l wucuo/wucuo.el -l .github/.wucuo.el --eval '(let* ((ispell-program-name "aspell") (ispell-extra-args (wucuo-aspell-cli-args t))) (wucuo-spell-check-directory "." t))'
+        emacs -batch -Q -L wucuo/ -l .github/.wucuo.el --eval '(let* ((ispell-program-name "aspell") (ispell-extra-args (wucuo-aspell-cli-args t))) (wucuo-spell-check-directory "." t))'

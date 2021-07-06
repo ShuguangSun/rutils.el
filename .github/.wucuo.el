@@ -1,3 +1,5 @@
+(require 'wucuo)
+
 (add-to-list 'wucuo-exclude-directories ".github")
 (add-to-list 'wucuo-exclude-directories "wucuo")
 

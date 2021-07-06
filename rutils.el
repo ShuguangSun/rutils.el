@@ -70,7 +70,7 @@ Optional argument BUFFER if non-nil, display the output in the BUFFER."
 (defun rutils-send--command-with-project (verb args &optional buffer)
   "Send command with project path.
 Argument VERB R command, a string.
-Argument ARGS args from transient.
+Argument ARGS arguments from transient.
 Optional argument BUFFER if non-nil, display outputs in the buffer."
   (if (not args)
        (rutils-send--command (concat verb "()") buffer)
