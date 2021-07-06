@@ -40,6 +40,12 @@ excluded_words:
   - typoci
   - emacs
   - defun
+  - rutils
+  - ess-command
+  - elisp
+  - rutils-send--command-with-project
+  - rutils-packrat-status
+  - rutils-renv-status
 
 # Would you like filenames to also be spellchecked?
-# spellcheck_filenames: true
+spellcheck_filenames: false
