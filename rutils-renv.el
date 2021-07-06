@@ -105,13 +105,7 @@
    ("-R" "Restart? Default `interactive()'" "--restart")
    ]
   [["Renv::"
-    ("i" "Init"         rutils-renv-init-run)]]
-  (interactive)
-  ;; (if-let ((buffer (magit-commit-message-buffer)))
-  ;;     (switch-to-buffer buffer)
-  (transient-setup 'rutils-renv-init)
-  ;;)
-  )
+    ("i" "Init"         rutils-renv-init-run)]])
 
 ;;; * renv::snapshot
 (defun rutils-renv-snapshot-run (&optional args)

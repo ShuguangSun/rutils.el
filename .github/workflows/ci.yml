@@ -5,10 +5,12 @@ on:
     paths-ignore:
       - '**.md'
       - '**.gif'
+      - '.aspell.en.pws'
   pull_request:
     paths-ignore:
       - '**.md'
       - '**.gif'
+      - '.aspell.en.pws'
 
 jobs:
   build:
