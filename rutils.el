@@ -1,4 +1,4 @@
-;;; rutils.el --- General stuffs                -*- lexical-binding: t; -*-
+;;; rutils.el --- R utilities with transient                -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shuguang Sun
 
@@ -49,9 +49,9 @@
 
 
 (defsubst rutils-send--command (cmd &optional buffer)
-  "Wrap up of `ess-command' with checking process avalability frist.
+  "Wrap up of `ess-command' with checking process availability first.
 Argument CMD R script/command as string.
-Optional argument BUFFER if non-nill, display the output in the BUFFER."
+Optional argument BUFFER if non-nil, display the output in the BUFFER."
   (unless (and (string= "R" ess-dialect) ess-local-process-name)
     (ess-switch-process))
   (let* ((buf (current-buffer))

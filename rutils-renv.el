@@ -223,7 +223,7 @@
    (rutils-renv:--reuse-project)
    ;; packages not supported
    ;; library not supported
-   ("-u" "surces? Default `FALSE'" "--update")
+   ("-u" "update? Default `FALSE'" "--update")
    ;; ("-s" "sources? Default `NULL'" "--sources")
    ]
   [["Renv::"
@@ -285,7 +285,7 @@
     ("h" "hydrate" rutils-renv-hydrate)
     ("u" "update" rutils-renv-update)]
    ["Renv::"
-    ("S" "Stutas" rutils-renv-status)
+    ("S" "Status" rutils-renv-status)
     ("D" "Diagnostics" rutils-renv-diagnostics-run)
     ("d" "Dependencies"         rutils-renv-dependencies)]])
 

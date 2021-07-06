@@ -5,6 +5,15 @@
 
 R utilities with transient.
 
+## Installation
+
+Clone this repository, or install from MELPA (TODO). Add the following to your `.emacs` to load all rutils:
+
+``` elisp
+(require 'rutils-site)
+```
+
+
 # R renv
 
 R renv utilities: `rutils-renv'

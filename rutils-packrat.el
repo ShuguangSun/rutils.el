@@ -90,7 +90,7 @@
    (rutils-packrat:--reuse-project)
    ("-e" "Enter? Default `TRUE'" "enter=FALSE")
    ("-R" "Restart? Default `TRUE'" "restart=FALSE")
-   ("-d" "infer.dependencies? Default `TRUE'" "infer.denpendencies=FALSE")
+   ("-d" "infer.dependencies? Default `TRUE'" "infer.dependencies=FALSE")
    ]
   [["Packrat::"
     ("i" "Init"         rutils-packrat-init-run)]])
@@ -101,20 +101,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-snapshot))))
-  (let (proj)
-    (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
-      (setq proj (cl-find nil args
-                          :if (lambda (x) (string-match-p "\\`--project=" x))))
-      (when (> (length proj) 0)
-        (setq proj (file-name-as-directory (substring proj 10)))
-        (if (file-exists-p proj)
-            (dired proj)
-          (if (y-or-n-p-with-timeout
-               (format "\"%s\" not exist. Create it? " proj) 4 nil)
-              (progn (make-directory proj)
-                     (dired proj))))))
-    (if args (setq args (rutils-packrat--assert args)) "")
-    (rutils-send--command (concat "packrat::snapshot(" args ")"))))
+  (rutils-send--command-with-project "packrat::snapshot" args))
 
 ;;;###autoload (autoload 'rutils-packrat-snapshot "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-snapshot ()
@@ -160,7 +147,7 @@
   "R packrat::restore."
   ["Arguments"
    (rutils-packrat:--reuse-project)
-   ("-o" "Overwite.dirty? Default `FALSE'" "overwrite.dirty=TRUE")
+   ("-o" "Overwrite.dirty? Default `FALSE'" "overwrite.dirty=TRUE")
    ("-d" "dry.run? Default `FALSE'" "dry.run=TRUE")
    ("-R" "Restart? Default `TRUE'" "restart=FALSE")]
   [["Packrat::"
@@ -184,7 +171,7 @@
    ("-il" "include.lib?" "include.lib=TRUE")
    ("-ib" "include.bundles?" "include.bundles=FALSE")
    ("-iv" "include.vcs.history?" "include.vcs.history=TRUE")
-   ("-ov" "Overwite.dirty? Default `FALSE'" "overwrite=TRUE")
+   ("-ov" "Overwrite.dirty? Default `FALSE'" "overwrite=TRUE")
    ("-om" "omit.cran.src? Default `FALSE'" "omit.cran.src=TRUE")]
   [["Packrat::"
     ("b" "Bundle"         rutils-packrat-bundle-run)]])
@@ -297,7 +284,7 @@
     ("u" "unbundle" rutils-packrat-unbundle)
     ("c" "clean" rutils-packrat-clean)]
    ["Packrat::"
-    ("S" "Stutas" rutils-packrat-status)
+    ("S" "Status" rutils-packrat-status)
     ("U" "Unused_packages" rutils-packrat-unused_packages)
     ("g" "get_opts"         rutils-packrat-get_opts)]])
 
