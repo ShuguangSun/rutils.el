@@ -30,6 +30,13 @@ jobs:
     - name: Install dependency
       run: sudo apt install aspell aspell-en
 
+    - name: Install Wucuo
+      run: mkdir -p wucuo &&
+        curl -fsSL https://raw.githubusercontent.com/redguardtoo/wucuo/master/wucuo.el > wucuo/wucuo.el &&
+        curl -fsSL https://raw.githubusercontent.com/redguardtoo/wucuo/master/wucuo-sdk.el > wucuo/wucuo-sdk.el &&
+        curl -fsSL https://raw.githubusercontent.com/redguardtoo/wucuo/master/wucuo-flyspell-html-verify.el &&
+        curl -fsSL https://raw.githubusercontent.com/redguardtoo/wucuo/master/wucuo-flyspell-org-verify.el > wucuo/wucuo-flyspell-org-verify.el
+
     - name: Wucuo
       run: |
-        emacs -batch -Q -L deps/ -l deps/wucuo.el --eval '(let* ((ispell-program-name "aspell") (ispell-extra-args (wucuo-aspell-cli-args t))) (wucuo-spell-check-directory "." t))'
+        emacs -batch -Q -L wucuo/ -l wucuo/wucuo.el -l .github/.wucuo.el --eval '(let* ((ispell-program-name "aspell") (ispell-extra-args (wucuo-aspell-cli-args t))) (wucuo-spell-check-directory "." t))'
