@@ -1,0 +1,35 @@
+name: Wucuo
+
+on:
+  push:
+    paths-ignore:
+      - '**.gif'
+  pull_request:
+    paths-ignore:
+      - '**.gif'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        emacs_version:
+          - 27.2
+
+    steps:
+    - uses: purcell/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs_version }}
+
+    - uses: actions/checkout@v2
+
+    - name: Print emacs version
+      run: emacs --version
+
+    - name: Install dependency
+      run: sudo apt install aspell aspell-en
+
+    - name: Wucuo
+      run: |
+        emacs -batch -Q -L deps/ -l deps/wucuo.el --eval '(let* ((ispell-program-name "aspell") (ispell-extra-args (wucuo-aspell-cli-args t))) (wucuo-spell-check-directory "." t))'
