@@ -4,6 +4,7 @@ CMD
 Init
 MERCHANTABILITY
 Shuguang
+args
 autoload
 boolean
 buffer
