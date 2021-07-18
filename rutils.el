@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+(require 'rutils-lib)
+
 (require 'rutils-renv)
 (require 'rutils-packrat)
 

@@ -10,7 +10,7 @@ R utilities with transient.
 Clone this repository, or install from MELPA (TODO). Add the following to your `.emacs` to load all rutils:
 
 ``` elisp
-(require 'rutils-site)
+(require 'rutils)
 ```
 
 
