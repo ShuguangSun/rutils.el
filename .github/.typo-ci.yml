@@ -48,8 +48,11 @@ excluded_words:
   - rutils-packrat-status
   - rutils-renv-status
   - rutils-send--command-with-project
+  - package
+  - renv
   - typoci
   - wucuo
+  - defsubst
 
 # Would you like filenames to also be spellchecked?
 spellcheck_filenames: false

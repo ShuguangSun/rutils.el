@@ -1,4 +1,4 @@
-;;; rutils.el --- R utilities with transient                -*- lexical-binding: t; -*-
+;;; rutils-lib.el --- R utilities with transient                -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shuguang Sun
 
@@ -42,7 +42,7 @@
   :prefix "rutils")
 
 
-(defsubst rutils--send-command (cmd &optional buffer)
+(defsubst rutils-lib--send-command (cmd &optional buffer)
   "Wrap up of `ess-command' with checking process availability first.
 Argument CMD R script/command as string.
 Optional argument BUFFER if non-nil, display the output in the BUFFER."
@@ -61,13 +61,13 @@ Optional argument BUFFER if non-nil, display the output in the BUFFER."
         (pop-to-buffer buf)
         (revert-buffer)))))
 
-(defun rutils--send-command-with-project (verb args &optional buffer)
+(defun rutils-lib--send-command-with-project (verb args &optional buffer)
   "Send command with project path.
 Argument VERB R command, a string.
 Argument ARGS arguments from transient.
 Optional argument BUFFER if non-nil, display outputs in the buffer."
   (if (not args)
-       (rutils--send-command (concat verb "()") buffer)
+       (rutils-lib--send-command (concat verb "()") buffer)
      (let (proj)
        ;; dir first
        (when (cl-find-if (lambda (a) (string-match-p "\\`--project=" a)) args)
@@ -83,10 +83,10 @@ Optional argument BUFFER if non-nil, display outputs in the buffer."
                  (progn (make-directory proj)
                         (dired proj))))))
        (if args (setq args (rutils-renv--assert args)) "")
-       (rutils--send-command (concat verb "(" args ")") buffer))))
+       (rutils-lib--send-command (concat verb "(" args ")") buffer))))
 
 
 
 
-(provide 'rutils)
-;;; rutils.el ends here
+(provide 'rutils-lib)
+;;; rutils-lib.el ends here
