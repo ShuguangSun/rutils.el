@@ -1,4 +1,4 @@
-name: Eldev
+name: Eldevlint
 
 on:
   push:
