@@ -1,4 +1,4 @@
-;;; rutils-lib.el --- R utilities with transient                -*- lexical-binding: t; -*-
+;;; rutils-lib.el --- R utilities common functions                -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shuguang Sun
 

@@ -1,4 +1,4 @@
-;;; rutils-site.el --- user customization of rutils       -*- lexical-binding: t; -*-
+;;; rutils.el --- R utilities with transient       -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Shuguang Sun
 
@@ -33,5 +33,5 @@
 (require 'rutils-renv)
 (require 'rutils-packrat)
 
-(provide 'rutils-site)
-;;; rutils-site.el ends here
+(provide 'rutils)
+;;; rutils.el ends here
