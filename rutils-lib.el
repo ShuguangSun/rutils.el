@@ -55,7 +55,6 @@ Optional argument BUFFER if non-nil, display the output in the BUFFER."
                (not (process-get proc 'busy)))
       (if buffer
           (ess-execute cmd (get-buffer-create buffer))
-        ;; (ess-command cmd nil nil nil nil proc)
         (pop-to-buffer (process-buffer proc))
         (ess-send-string proc cmd t)
         (pop-to-buffer buf)
