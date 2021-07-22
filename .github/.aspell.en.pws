@@ -4,6 +4,7 @@ CMD
 Init
 MERCHANTABILITY
 Shuguang
+argfilter
 args
 autoload
 boolean
