@@ -65,7 +65,8 @@ Optional argument BUFFER if non-nil, display the output in the BUFFER."
   "Send command with project path.
 Argument VERB R command, a string.
 Argument ARGS arguments from transient.
-Optional argument BUFFER if non-nil, display outputs in the buffer."
+Optional argument BUFFER if non-nil, display outputs in the buffer.
+Argument ARGFILTER function to filter or assert arguments to verb."
   (if (not args)
        (rutils-lib--send-command (concat verb "()") buffer)
      (let (proj)
