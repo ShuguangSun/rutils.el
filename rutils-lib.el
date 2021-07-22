@@ -61,7 +61,7 @@ Optional argument BUFFER if non-nil, display the output in the BUFFER."
         (pop-to-buffer buf)
         (revert-buffer)))))
 
-(defun rutils-lib--send-command-with-project (verb args &optional buffer)
+(defun rutils-lib--send-command-with-project (verb args argfilter &optional buffer)
   "Send command with project path.
 Argument VERB R command, a string.
 Argument ARGS arguments from transient.
@@ -82,7 +82,8 @@ Optional argument BUFFER if non-nil, display outputs in the buffer."
                   (format "\"%s\" not exist. Create it? " proj) 4 nil)
                  (progn (make-directory proj)
                         (dired proj))))))
-       (if args (setq args (rutils-renv--assert args)) "")
+       (when (and args (functionp argfilter))
+         (setq args (funcall argfilter args)) "")
        (rutils-lib--send-command (concat verb "(" args ")") buffer))))
 
 

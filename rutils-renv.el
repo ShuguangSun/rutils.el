@@ -88,7 +88,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-init))))
-  (rutils-lib--send-command-with-project "renv::init" args))
+  (rutils-lib--send-command-with-project "renv::init" args 'rutils-renv--assert))
 
 ;;;###autoload (autoload 'rutils-renv-init "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-init ()
@@ -113,7 +113,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-snapshot))))
-  (rutils-lib--send-command-with-project "renv::snapshot" args))
+  (rutils-lib--send-command-with-project "renv::snapshot" args 'rutils-renv--assert))
 
 (transient-define-infix rutils-renv:--snapshot-type ()
   :description "Type? Default `implicit'"
@@ -152,7 +152,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-status))))
-  (rutils-lib--send-command-with-project "renv::status" args))
+  (rutils-lib--send-command-with-project "renv::status" args 'rutils-renv--assert))
 
 ;;;###autoload (autoload 'rutils-renv-status "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-status ()
@@ -195,7 +195,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-update))))
-  (rutils-lib--send-command-with-project "renv::update" args))
+  (rutils-lib--send-command-with-project "renv::update" args 'rutils-renv--assert))
 
 ;;;###autoload (autoload 'rutils-renv-update "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-update ()
@@ -216,7 +216,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-hydrate))))
-  (rutils-lib--send-command-with-project "renv::hydrate" args))
+  (rutils-lib--send-command-with-project "renv::hydrate" args 'rutils-renv--assert))
 
 ;;;###autoload (autoload 'rutils-renv-hydrate "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-hydrate ()
@@ -238,7 +238,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-dependencies))))
-  (rutils-lib--send-command-with-project "renv::dependencies" args))
+  (rutils-lib--send-command-with-project "renv::dependencies" args 'rutils-renv--assert))
 
 (transient-define-infix rutils-renv:--dependencies-errors ()
   :description "errors? Default all (reported, fatal, ignored)."
@@ -271,7 +271,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv))))
-  (rutils-lib--send-command-with-project "renv::diagnostics" args))
+  (rutils-lib--send-command-with-project "renv::diagnostics" args 'rutils-renv--assert))
 
 ;;; * menu
 ;;;###autoload (autoload 'rutils-renv "rutils-renv" nil t)

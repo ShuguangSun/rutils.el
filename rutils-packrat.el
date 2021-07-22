@@ -44,7 +44,7 @@
   '(;; directory
     "project" "where"
     ;; file
-    bundle)
+    "file" "bundle")
   "R packrat STRING options.")
 
 (defun rutils-packrat--assert (args)
@@ -56,6 +56,7 @@
     (cl-loop for arg in args
              do (cond
                  ((string-match strlist arg)
+                  (print arg)
                   (setq arg (concat
                              (substring arg (match-beginning 1) (match-end 1))
                              "="
@@ -81,7 +82,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-init))))
-  (rutils-lib--send-command-with-project "packrat::init" args))
+  (rutils-lib--send-command-with-project "packrat::init" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-init "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-init ()
@@ -101,7 +102,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-snapshot))))
-  (rutils-lib--send-command-with-project "packrat::snapshot" args))
+  (rutils-lib--send-command-with-project "packrat::snapshot" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-snapshot "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-snapshot ()
@@ -140,7 +141,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-restore))))
-  (rutils-lib--send-command-with-project "packrat::restore" args))
+  (rutils-lib--send-command-with-project "packrat::restore" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-restore "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-restore ()
@@ -159,7 +160,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-bundle))))
-  (rutils-lib--send-command-with-project "packrat::bundle" args))
+  (rutils-lib--send-command-with-project "packrat::bundle" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-bundle "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-bundle ()
@@ -182,7 +183,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-unbundle))))
-  (rutils-lib--send-command-with-project "packrat::unbundle" args))
+  (rutils-lib--send-command-with-project "packrat::unbundle" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-unbundle "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-unbundle ()
@@ -200,7 +201,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-clean))))
-  (rutils-lib--send-command-with-project "packrat::clean" args))
+  (rutils-lib--send-command-with-project "packrat::clean" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-clean "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-clean ()
@@ -238,7 +239,8 @@
                    nil
                  (list (transient-args 'rutils-packrat-unused_packages))))
   (rutils-lib--send-command-with-project "packrat::unused_packages" args
-                                     rutils-packrat-buffer))
+                                         'rutils-packrat--assert
+                                         rutils-packrat-buffer))
 
 (transient-define-prefix rutils-packrat-unused_packages ()
   "R packrat::unused_packages."
@@ -255,7 +257,8 @@
                    nil
                  (list (transient-args 'rutils-packrat-get_opts))))
   (rutils-lib--send-command-with-project "packrat::init" args
-                                     rutils-packrat-buffer))
+                                         'rutils-packrat--assert
+                                         rutils-packrat-buffer))
 
 (transient-define-prefix rutils-packrat-get_opts ()
   "R packrat::get_opts."
