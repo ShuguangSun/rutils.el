@@ -123,7 +123,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-status))))
-  (rutils-lib--send-command-with-project "packrat::status" args))
+  (rutils-lib--send-command-with-project "packrat::status" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-status "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-status ()
@@ -221,7 +221,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-packrat-disable))))
-  (rutils-lib--send-command-with-project "packrat::disable" args))
+  (rutils-lib--send-command-with-project "packrat::disable" args 'rutils-packrat--assert))
 
 ;;;###autoload (autoload 'rutils-packrat-disable "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat-disable ()

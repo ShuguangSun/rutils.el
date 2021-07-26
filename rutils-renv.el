@@ -172,7 +172,7 @@
   (interactive (if current-prefix-arg
                    nil
                  (list (transient-args 'rutils-renv-restore))))
-  (rutils-lib--send-command-with-project "renv::restore" args))
+  (rutils-lib--send-command-with-project "renv::restore" args 'rutils-renv--assert))
 
 ;;;###autoload (autoload 'rutils-renv-restore "rutils-renv" nil t)
 (transient-define-prefix rutils-renv-restore ()
