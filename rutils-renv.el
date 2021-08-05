@@ -277,8 +277,8 @@
 ;;;###autoload (autoload 'rutils-renv "rutils-renv" nil t)
 (transient-define-prefix rutils-renv ()
   "R renv menu."
-  ["Arguments"
-   (rutils-renv:--reuse-project)]
+  ;; ["Arguments"
+  ;;  (rutils-renv:--reuse-project)]
   [["Renv::"
     ("i" "init" rutils-renv-init)
     ("s" "snapshot" rutils-renv-snapshot)

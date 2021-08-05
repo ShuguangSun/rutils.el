@@ -275,8 +275,8 @@
 ;;;###autoload (autoload 'rutils-packrat "rutils-packrat" nil t)
 (transient-define-prefix rutils-packrat ()
   "R packrat menu."
-  ["Arguments"
-   (rutils-packrat:--reuse-project)]
+  ;; ["Arguments"
+  ;;  (rutils-packrat:--reuse-project)]
   [["Packrat::"
     ("i" "init" rutils-packrat-init)
     ("s" "snapshot" rutils-packrat-snapshot)

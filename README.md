@@ -1,3 +1,5 @@
+[![MELPA](https://melpa.org/packages/rutils-badge.svg)](https://melpa.org/#/rutils)
+[![MELPA Stable](https://stable.melpa.org/packages/rutils-badge.svg)](https://stable.melpa.org/#/rutils)
 [![Build Status](https://github.com/ShuguangSun/rutils/workflows/CI/badge.svg)](https://github.com/ShuguangSun/rutils/actions)
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
@@ -7,7 +9,7 @@ R utilities with transient.
 
 ## Installation
 
-Clone this repository, or install from MELPA (TODO). Add the following to your `.emacs` to load all rutils:
+Clone this repository, or install from MELPA. Add the following to your `.emacs` to load all rutils:
 
 ``` elisp
 (require 'rutils)
