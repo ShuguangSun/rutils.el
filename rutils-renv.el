@@ -273,6 +273,76 @@
                  (list (transient-args 'rutils-renv))))
   (rutils-lib--send-command-with-project "renv::diagnostics" args 'rutils-renv--assert))
 
+
+
+;;; * renv::install
+(defun rutils-renv-install--assert (args)
+  "Parse transient ARGS of renv::install."
+  (let ((bollist '("--rebuild"))
+        (strlist (concat
+                  "\\`--\\("
+                  (mapconcat 'identity rutils-renv-option-string-list "\\|")
+                  "\\)=\\(.+\\)")))
+    (cl-loop for arg in args
+             do (cond
+                 ((string= (substring arg 0 7) "--cran=")
+                  (setq arg (concat
+                             "packages="
+                             (shell-quote-argument
+                              (substring arg 7)))))
+                 ((string= (substring arg 0 9) "--remote=")
+                  (setq arg (concat
+                             "packages="
+                             (shell-quote-argument
+                              (substring arg 9)))))
+                 ((string-match strlist arg)
+                  (setq arg (concat
+                             (substring arg (match-beginning 1) (match-end 1))
+                             "="
+                             (shell-quote-argument
+                           (substring arg (match-beginning 2) (match-end 2))))))
+                 ((member arg bollist)
+                  (setq arg (concat (substring arg 2) "=TRUE")))
+                 (t
+                  (setq arg nil)))
+             collect arg into ret
+             finally return (string-join (delq nil (delete-dups ret)) ", "))))
+
+(transient-define-infix rutils-renv:--install-type ()
+  :description "Type? Default `NULL' `getOption(\"pkgType\")'"
+  :class 'transient-option
+  :key "-t"
+  :argument "--type="
+  :choices '("NULL" "source" "binary"))
+
+(defun rutils-renv-install-run (&optional args)
+  "Invoke renv::install with ARGS if provided."
+  (interactive (if current-prefix-arg
+                   nil
+                 (list (transient-args 'rutils-renv-install))))
+  (rutils-lib--send-command-with-project "renv::install" args
+                                         'rutils-renv-install--assert))
+
+;;;###autoload (autoload 'rutils-renv-install "rutils-renv" nil t)
+(transient-define-prefix rutils-renv-install ()
+  "R renv::install."
+  ["Arguments"
+   (rutils-renv:--reuse-project)
+   ;; packages not supported
+   ;; library not supported
+   ("-c" "CRAN packages" "--cran=" rutils-read-cran-package-list)
+   ("-r" "remote package" "--remote=")
+   ("-l" "library to install, default the active project"
+    "--library=" transient-read-existing-directory)
+   ;; ("-t" "type: source or binary" "--type=")
+   (rutils-renv:--install-type)
+   ("-R" "Force packages to be rebuilt" "--rebuild")
+   ;; ("-s" "sources? Default `NULL'" "--sources")
+   ]
+  [["Renv::"
+    ("I" "Install"         rutils-renv-install-run)]])
+
+
 ;;; * menu
 ;;;###autoload (autoload 'rutils-renv "rutils-renv" nil t)
 (transient-define-prefix rutils-renv ()
@@ -284,6 +354,7 @@
     ("s" "snapshot" rutils-renv-snapshot)
     ("r" "restore" rutils-renv-restore)]
    ["Renv::"
+    ("I" "Install package" rutils-renv-install)
     ("h" "hydrate" rutils-renv-hydrate)
     ("u" "update" rutils-renv-update)]
    ["Renv::"

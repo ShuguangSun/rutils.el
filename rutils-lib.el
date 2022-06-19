@@ -85,7 +85,14 @@ Argument ARGFILTER function to filter or assert arguments to verb."
          (setq args (funcall argfilter args)) "")
        (rutils-lib--send-command (concat verb "(" args ")") buffer))))
 
-
+(defun rutils-read-cran-package-list (prompt _initial-input _history)
+  "Read a package from CRAN."
+  (if (not (string-match-p "^R" ess-dialect))
+      (message "Sorry, not available for %s" ess-dialect)
+    (let ((ess-eval-visibly-p t)
+          (packs (ess-get-words-from-vector
+                  "print(rownames(available.packages()), max=1e6)\n")))
+      (completing-read prompt packs nil nil))))
 
 
 (provide 'rutils-lib)
