@@ -1,10 +1,10 @@
 ;;; rutils-packrat.el --- R packrat with transient           -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Shuguang Sun
+;; Copyright (C) 2021-2024  Shuguang Sun
 
 ;; Author: Shuguang Sun <shuguang79@qq.com>
 ;; Created: 2021/07/02
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; URL: https://github.com/ShuguangSun/rutils.el
 ;; Package-Requires: ((emacs "26.1") (ess "18.10.1") (transient "0.3.0"))
 ;; Keywords: convenience

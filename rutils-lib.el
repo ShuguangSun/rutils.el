@@ -1,10 +1,10 @@
 ;;; rutils-lib.el --- R utilities common functions                -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Shuguang Sun
+;; Copyright (C) 2021-2024  Shuguang Sun
 
 ;; Author: Shuguang Sun <shuguang79@qq.com>
 ;; Created: 2021/06/25
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; URL: https://github.com/ShuguangSun/rutils
 ;; Keywords: convenience
 

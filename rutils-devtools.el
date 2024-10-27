@@ -1,10 +1,10 @@
 ;;; rutils-devtools.el --- R devtools with transient           -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  Shuguang Sun
+;; Copyright (C) 2022-2024  Shuguang Sun
 
 ;; Author: Shuguang Sun <shuguang79@qq.com>
 ;; Created: 2021/06/19
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; URL: https://github.com/ShuguangSun/rutils.el
 ;; Package-Requires: ((emacs "26.1") (ess "18.10.1") (transient "0.3.0"))
 ;; Keywords: convenience
@@ -59,6 +59,14 @@
 
 ;;  ]
 
+(defun rutils-devtools-build-binary (&optional arg)
+  "Interface for `devtools::build()'.
+With prefix ARG, build with `vignettes = FALSE'."
+  (interactive "P")
+  (ess-r-package-eval-linewise
+   "devtools::build(%s)\n" "Building %s" arg
+   '("binary = TRUE" "binary = TRUE, vignettes = FALSE")))
+
 
 ;;; * menu
 ;;;###autoload (autoload 'rutils-devtools "rutils-devtools" nil t)
@@ -68,6 +76,7 @@
   ;;  (rutils-renv:--reuse-project)]
   [["Dev"
     ("b" "Build" ess-r-devtools-build)
+    ("B" "Build" rutils-devtools-build-binary)
     ("c" "check" ess-r-devtools-check-package)
     ("d" "document" ess-r-devtools-document-package)
     ("l" "load" ess-r-devtools-load-package)
